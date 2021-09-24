@@ -35,6 +35,9 @@ public:
     id(id&&) = delete;
     id& operator=(const id&) = delete;
     id& operator=(id&&) = delete;
+    
+    id() = default;
+    ~id() = default;
 
     /**
      * @brief Creates an id instance from the argument string

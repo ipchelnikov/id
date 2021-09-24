@@ -108,12 +108,3 @@ std::string id::get()
 
     return res;
 }
-
-int main()
-{
-    id test_id {"Z9-Z9"};
-
-    std::cout << test_id.get_incremented() << std::endl;
-
-    return 0;
-}
