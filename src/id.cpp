@@ -11,9 +11,8 @@ const std::string id::letters {"ABCEHIKLNOPRSTUWXYZ"};
 
 const char* id::SIZE_ISSUE {"Size issue"};
 const char* id::PADDING_FORMAT_ISSUE {"Padding format issue"};
-const char* id::LETTER_OUT_OF_RANGE {"Letter is out of the range"}; 
+const char* id::LETTER_OUT_OF_RANGE {"Letter is out of the range"};
 const char* id::NUMBER_OUT_OF_RANGE {"Number is out of the range"};
-
 
 id::id(const std::string &s)
 {
@@ -87,18 +86,13 @@ id &id::operator++()
     }
     _l = 0;
 
-    // As not mentioned in the task,
+    // NOTE: As not mentioned in the task,
     // let us assume the following is the desired behaviour for overflow
     _g = _g < 9 ? _g + 1 : 0;
 
     return *this;
 }
 
-// Replaced with a better version
-// std::string get()
-// {
-//     return padding.substr(0, _g*3)+letters[_l]+_n;
-// }
 std::string id::get()
 {
     auto res = padding.substr(0, _g * 3 + 2);

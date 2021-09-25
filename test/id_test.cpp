@@ -29,18 +29,41 @@ TEST(IdTest, AssignWithForbiddenSymbols)
 
     id test_id;
 
-    try
-    {
-        test_id = "A0";
-    }
-    catch (std::invalid_argument e)
-    {
-        exception_is_trown = true;
-        EXPECT_STREQ(e.what(), id::NUMBER_OUT_OF_RANGE);
-    }
+    std::string forbidden[] = {"A0", "D1", "F1", "G1",
+                               "J1", "M1", "Q1", "V1", "A1-", "1", "",
+                               "Z9-Z9-Z9-Z9-Z9-Z9-Z9-Z9-Z9-Z9-Z9"};
 
-    EXPECT_TRUE(exception_is_trown);
+    for (const auto& s : forbidden)
+    {
+        try
+        {
+            test_id = s;
+        }
+        catch (std::invalid_argument e)
+        {
+            exception_is_trown = true;
+        }
+
+        EXPECT_TRUE(exception_is_trown);
+        exception_is_trown = false;
+    }
 }
+
+#ifdef _perfomance_test_
+#include <chrono>
+
+TEST(IdTest, RerfTest)
+{
+    id test_id{"A1"};
+
+    auto start = std::chrono::system_clock::now();
+    while (test_id.get_incremented() != "Z9-Z9-Z9-Z9-Z9-Z9-Z9-Z9-Z9-Z9") {}
+    auto end = std::chrono::system_clock::now();
+
+    std::chrono::duration<double> elapsed_seconds = end-start;
+    std::cout << "Elapsed time: " << elapsed_seconds.count() << "s\n";
+}
+#endif
 
 int main(int argc, char* argv[])
 {

@@ -17,9 +17,18 @@ Allowed numbers are - 1...9
 To clone and build the project, run the following:
 > **_NOTE:_** Requires CMake 3.14 or newer
 
+### Using default compiler
+
     git clone https://github.com/ipchelnikov/id.git
     cd id
     cmake ./
+    make all
+
+### Using clang compiler
+
+    git clone https://github.com/ipchelnikov/id.git
+    cd id
+    cmake -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ ./
     make all
 
 ## Run
