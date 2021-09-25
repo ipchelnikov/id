@@ -16,7 +16,7 @@ add_dependencies(id_test id)
 
 target_include_directories(id_test PUBLIC ${googletest_SOURCE_DIR}/googletest/include)
 target_include_directories(id_test PUBLIC ../src)
-target_link_libraries(id_test id gtest gtest_main pthread)
+target_link_libraries(id_test id gtest gtest_main) # pthread - do not link for now
 
 #########################################
 # Make the test runnable with $ make check

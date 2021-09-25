@@ -63,6 +63,7 @@ public:
 
 private:
 
+    // Helper constants
     static const std::string padding;
     static const std::string letters;
 
@@ -77,9 +78,9 @@ private:
      */
     std::string get();
 
-    int _g{0};    // group
-    int _l{0};    // letter
-    char _n{'1'}; // number
+    size_t  _l{0};   // letter
+    size_t  _g{0};   // group
+    char    _n{'1'}; // number
 
     std::mutex _m;
 

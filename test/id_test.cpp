@@ -39,7 +39,7 @@ TEST(IdTest, AssignWithForbiddenSymbols)
         {
             test_id = s;
         }
-        catch (std::invalid_argument e)
+        catch (std::invalid_argument& e)
         {
             exception_is_trown = true;
         }

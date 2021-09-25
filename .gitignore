@@ -14,4 +14,9 @@ _deps
 lib/*
 bin/*
 
+# VSCode files
 .vscode/*
+
+# VS files
+.vs
+out
