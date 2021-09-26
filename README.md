@@ -15,9 +15,9 @@ Allowed numbers are - 1...9
 ## Build
 
 To clone and build the project, run the following:
-> **_NOTE:_** Requires CMake 3.14 or newer
 
 ### Using default compiler
+> **_NOTE:_** Requires CMake 3.14 or newer
 
     git clone https://github.com/ipchelnikov/id.git
     cd id
@@ -25,11 +25,20 @@ To clone and build the project, run the following:
     make all
 
 ### Using clang compiler
+> **_NOTE:_** Requires CMake 3.14 or newer
 
     git clone https://github.com/ipchelnikov/id.git
     cd id
     cmake -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ ./
     make all
+    
+### Using Visual Studio
+> **_NOTE:_** Requires **C++ CMake tools for Windows**
+
+    git clone https://github.com/ipchelnikov/id.git
+    Open id folder in Visual Studio 2019
+    Switch to CMake target view
+    Build->Build All
 
 ## Run
 
