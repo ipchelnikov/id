@@ -55,9 +55,8 @@ TEST(IdTest, Assign_Ill_Formatted_String_To_Id)
         exception_is_trown = false;
     }
 }
-
-//fdef _perfomance_test_
-TEST(IdTest, RerfTest)
+/*
+TEST(IdTest, Perf_Test)
 {
     id test_id{ "A1-A1-A1" };
 
@@ -73,7 +72,18 @@ TEST(IdTest, RerfTest)
     std::cout << "ID: " << s << '\n';
     std::cout << "Elapsed time: " << elapsed_seconds.count() << "s\n";
 }
-//#endif
+*/
+TEST(IdTest, Conner_Cases)
+{
+    id test_id{ "A1-Z9-Z9" };
+    EXPECT_EQ(test_id.get_next(), "A2-A1-A1");
+
+    test_id = "Z9-Z9-Z9";
+    EXPECT_EQ(test_id.get_next(), "A1-A1-A1-A1");
+
+    test_id = "Z9-Z9-Z9-Z9-Z9-Z9-Z9-Z9-Z9-Z9";
+    EXPECT_EQ(test_id.get_next(), "A1");
+}
 
 int main(int argc, char* argv[])
 {

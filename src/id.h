@@ -23,14 +23,14 @@ class id final
 public:
 
     // Exceptions
-    static constexpr char SIZE_ISSUE[]{"Size issue"};
-    static constexpr char FORMAT_ISSUE[]{"Format issue"};
-    static constexpr char LETTER_OUT_OF_RANGE[]{"Letter is out of the range"};
-    static constexpr char NUMBER_OUT_OF_RANGE[]{"Number is out of the range"};
+    static constexpr char SIZE_ISSUE[] = "Size issue";
+    static constexpr char FORMAT_ISSUE[] = "Format issue";
+    static constexpr char LETTER_OUT_OF_RANGE[] = "Letter is out of the range";
+    static constexpr char NUMBER_OUT_OF_RANGE[] = "Number is out of the range";
 
     // Helper constants
-    static constexpr char ID_INITIAL[]{"A1"};
-    static constexpr char ID_SEPARATED[]{"-A1"};
+    static constexpr char ID_INITIAL[] = "A1";
+    static constexpr char ID_SEPARATED[] = "-A1";
 
     static constexpr char MIN_NUMBER{'1'};
     static constexpr char MAX_NUMBER{'9'};
@@ -40,7 +40,7 @@ public:
     static constexpr size_t GROUP_SIZE{3};
 
     // Allowed letters
-    static constexpr char LETTERS[]{"ABCEHIKLNOPRSTUWXYZ"};
+    static constexpr char LETTERS[] = "ABCEHIKLNOPRSTUWXYZ";
 
     // Letter indexes
     static const std::unordered_map<char, size_t> letter_ind;
