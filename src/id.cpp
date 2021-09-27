@@ -1,53 +1,58 @@
+#include <functional>
 #include <iostream>
 #include <mutex>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
 
 #include "id.h"
 
-// Constant initialization
-const std::string id::padding {"Z9-Z9-Z9-Z9-Z9-Z9-Z9-Z9-Z9-Z9"};
-const std::string id::letters {"ABCEHIKLNOPRSTUWXYZ"};
+const std::unordered_map<char, size_t> id::letter_ind = std::invoke(
+    []() -> const std::unordered_map<char, size_t>
+    {
+        std::unordered_map<char, size_t> r;
+        for (size_t i = 0; i < sizeof(LETTERS); ++i)
+        {
+            r[LETTERS[i]] = i;
+        }
+        return r;
+    });
 
-const char* id::SIZE_ISSUE {"Size issue"};
-const char* id::PADDING_FORMAT_ISSUE {"Padding format issue"};
-const char* id::LETTER_OUT_OF_RANGE {"Letter is out of the range"};
-const char* id::NUMBER_OUT_OF_RANGE {"Number is out of the range"};
-
-id::id(const std::string &s)
+id::id(const std::string& s) : _val{s}
 {
-    const auto s_size = s.size();
+    const auto s_size = _val.size() + 1;
 
     // Input size validation
-    if (s_size < 2 || s_size > 29 || (s_size + 1) % 3)
+    if (s_size < GROUP_SIZE ||
+        s_size > GROUP_SIZE * MAX_GROUPS ||
+        s_size % GROUP_SIZE)
     {
         throw std::invalid_argument(SIZE_ISSUE);
     }
 
-    // Init group
-    _g = ((s_size + 1) / 3) - 1;
-
-    if (_g > 0 && s.compare(0, 3 * (_g), padding, 0, 3 * (_g)) != 0)
+    for (size_t i = 0; i < (s_size + 1) / GROUP_SIZE; ++i)
     {
-        throw std::invalid_argument(PADDING_FORMAT_ISSUE);
-    }
+        const auto pos = i * GROUP_SIZE;
 
-    auto pos = _g * 3;
+        // Check delimiter format
+        if (pos && _val[pos - 1] != DELIMITER)
+        {
+            throw std::invalid_argument(FORMAT_ISSUE);
+        }
 
-    // Init letter
-    _l = letters.find(s[pos]);
+        // Check letter
+        if (letter_ind.find(_val[pos]) == letter_ind.end())
+        {
+            throw std::out_of_range(LETTER_OUT_OF_RANGE);
+        }
 
-    if (_l == letters.npos)
-    {
-        throw std::invalid_argument(LETTER_OUT_OF_RANGE);
-    }
+        // Check number
+        const auto n = _val[pos + 1];
 
-    // Init number
-    _n = s[pos + 1];
-
-    if (_n < '1' || _n > '9')
-    {
-        throw std::invalid_argument(NUMBER_OUT_OF_RANGE);
+        if (n < MIN_NUMBER || n > MAX_NUMBER)
+        {
+            throw std::out_of_range(NUMBER_OUT_OF_RANGE);
+        }
     }
 }
 
@@ -57,48 +62,57 @@ id& id::operator=(const std::string &s)
 
     std::unique_lock<std::mutex> lk(_m);
 
-    _g = tmp._g;
-    _l = tmp._l;
-    _n = tmp._n;
+    _val = tmp._val;
 
     return *this;
 }
 
-std::string id::get_incremented()
+std::string id::get_next()
 {
     std::unique_lock<std::mutex> lk(_m);
-    return (++*this).get();
+
+    ++*this;
+
+    return _val;
 }
 
-id &id::operator++()
+id& id::operator++()
 {
-    if (_n < '9')
-    {
-        ++_n;
-        return *this;
-    }
-    _n = '1';
+    const auto groups{(_val.size() + 1) / GROUP_SIZE};
 
-    if (_l < letters.size() - 1)
+    for (auto group{groups}; group > 0; --group)
     {
-        ++_l;
-        return *this;
-    }
-    _l = 0;
+        // Increment the number
+        const auto pos = (group - 1) * GROUP_SIZE;
+        if (_val[pos + 1] < MAX_NUMBER)
+        {
+            ++_val[pos + 1];
+            return *this;
+        }
+        _val[pos + 1] = MIN_NUMBER;
 
-    // NOTE: As not mentioned in the task,
-    // let us assume the following is the desired behaviour for overflow
-    _g = _g < 9 ? _g + 1 : 0;
+        // Increment the letter
+        const auto ind = letter_ind.at(_val[pos]);
+        if (ind < sizeof(LETTERS) - 2)
+        {
+            _val[pos] = LETTERS[ind + 1];
+            return *this;
+        }
+        _val[pos] = LETTERS[0];
+    }
+
+    // If there is enough capacity add new group
+    if (groups < MAX_GROUPS)
+    {
+        _val += ID_SEPARATED;
+    }
+    // Othrwise owerflow to the initial value.
+    // NOTE: As it was not mentioned in the task,
+    // this is assumed as the the desired behaviour.
+    else
+    {
+        _val = ID_INITIAL;
+    }
 
     return *this;
-}
-
-std::string id::get()
-{
-    auto res = padding.substr(0, _g * 3 + 2);
-
-    res[_g * 3] = letters[_l];
-    res[_g * 3 + 1] = _n;
-
-    return res;
 }

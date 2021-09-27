@@ -22,20 +22,36 @@ class id final
 {
 public:
 
-    // Public constant declarations
-    static const char* SIZE_ISSUE;
-    static const char* PADDING_FORMAT_ISSUE;
-    static const char* LETTER_OUT_OF_RANGE; 
-    static const char* NUMBER_OUT_OF_RANGE;
+    // Exceptions
+    static constexpr char SIZE_ISSUE[]{"Size issue"};
+    static constexpr char FORMAT_ISSUE[]{"Format issue"};
+    static constexpr char LETTER_OUT_OF_RANGE[]{"Letter is out of the range"};
+    static constexpr char NUMBER_OUT_OF_RANGE[]{"Number is out of the range"};
 
-    // The constactors could be implemented,
-    // but it was not a part of the task.
-    // So, they are disabled for now.
+    // Helper constants
+    static constexpr char ID_INITIAL[]{"A1"};
+    static constexpr char ID_SEPARATED[]{"-A1"};
+
+    static constexpr char MIN_NUMBER{'1'};
+    static constexpr char MAX_NUMBER{'9'};
+    static constexpr char DELIMITER{'-'};
+
+    static constexpr size_t MAX_GROUPS{10};
+    static constexpr size_t GROUP_SIZE{3};
+
+    // Allowed letters
+    static constexpr char LETTERS[]{"ABCEHIKLNOPRSTUWXYZ"};
+
+    // Letter indexes
+    static const std::unordered_map<char, size_t> letter_ind;
+
+    // Disabled constructors
     id(const id&) = delete;
     id(id&&) = delete;
     id& operator=(const id&) = delete;
     id& operator=(id&&) = delete;
-    
+
+    // Public interface
     id() = default;
     ~id() = default;
 
@@ -59,16 +75,12 @@ public:
      * @brief Increments id and returns the new value in formatted string
      * @return formatted string
      */
-    std::string get_incremented();
+    std::string get_next();
 
 private:
 
-    // Helper constants
-    static const std::string padding;
-    static const std::string letters;
-
     /**
-     * @brief increments the id
+     * @brief increments the id value
      */
     id& operator++();
 
@@ -78,9 +90,8 @@ private:
      */
     std::string get();
 
-    size_t  _l{0};   // letter
-    size_t  _g{0};   // group
-    char    _n{'1'}; // number
+
+    std::string _val = ID_INITIAL;
 
     std::mutex _m;
 
