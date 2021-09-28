@@ -106,9 +106,7 @@ id& id::operator++()
     {
         _val += ID_SEPARATED;
     }
-    // Othrwise owerflow to the initial value.
-    // NOTE: As it was not mentioned in the task,
-    // this is assumed as the the desired behaviour.
+    // Othrwise owerflow to the initial value
     else
     {
         _val = ID_INITIAL;

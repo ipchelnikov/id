@@ -20,3 +20,5 @@ bin/*
 # VS files
 .vs
 out
+
+test_result*
