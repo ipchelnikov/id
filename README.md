@@ -50,10 +50,11 @@ To clone and build the project, run the following:
 ### On Linux
 
     # From the project root directory
-    
     ./bin/id_test # Start unit tests
-    make check # To verify all tests
+    make check # Verify all tests using make
     
 ### On Windoes
 
-    "Build All" in Visual Studio CMake project
+    # From the project root directory
+    out\build\x64-Debug\bin\id_test.exe # Run debug tests
+    out\build\x64-Debug\bin\id_test.exe # Run release tests
