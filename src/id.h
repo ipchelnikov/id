@@ -28,23 +28,6 @@ public:
     static constexpr char LETTER_OUT_OF_RANGE[] = "Letter is out of the range";
     static constexpr char NUMBER_OUT_OF_RANGE[] = "Number is out of the range";
 
-    // Helper constants
-    static constexpr char ID_INITIAL[] = "A1";
-    static constexpr char ID_SEPARATED[] = "-A1";
-
-    static constexpr char MIN_NUMBER{'1'};
-    static constexpr char MAX_NUMBER{'9'};
-    static constexpr char DELIMITER{'-'};
-
-    static constexpr size_t MAX_GROUPS{10};
-    static constexpr size_t GROUP_SIZE{3};
-
-    // Allowed letters
-    static constexpr char LETTERS[] = "ABCEHIKLNOPRSTUWXYZ";
-
-    // Letter indexes
-    static const std::unordered_map<char, size_t> letter_ind;
-
     // Disabled constructors
     id(const id&) = delete;
     id(id&&) = delete;
@@ -52,6 +35,7 @@ public:
     id& operator=(id&&) = delete;
 
     // Public interface
+
     id() = default;
     ~id() = default;
 
@@ -79,17 +63,30 @@ public:
 
 private:
 
+    // Helper constants
+    static constexpr char ID_INITIAL[] = "A1";
+    static constexpr char ID_SEPARATED[] = "-A1";
+
+    static constexpr char MIN_NUMBER{'1'};
+    static constexpr char MAX_NUMBER{'9'};
+    static constexpr char DELIMITER{'-'};
+
+    static constexpr size_t MAX_GROUPS{10};
+    static constexpr size_t GROUP_SIZE{3};
+
+    // Allowed letters
+    static constexpr char LETTERS[] = "ABCEHIKLNOPRSTUWXYZ";
+
+    // Letter indexes
+    static const std::unordered_map<char, size_t> letter_ind;
+
+
+    // Internal interface
+
     /**
      * @brief increments the id value
      */
     id& operator++();
-
-    /**
-     * @brief Gets the value in string format
-     * @return Formatted string
-     */
-    std::string get();
-
 
     std::string _val = ID_INITIAL;
 
