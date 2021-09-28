@@ -12,6 +12,11 @@ Id must have from 1 to 10 groups, separated by '-'
 Allowed letters are - A B C E H I K L N O P R S T U W X Y Z
 Allowed numbers are - 1...9
 
+## Project structure
+
+* src - the main source directory, contains id class definition and implementation.
+* test - unit test source directory for id class implementation.
+
 ## Build
 
 To clone and build the project, run the following:
@@ -42,7 +47,13 @@ To clone and build the project, run the following:
 
 ## Run
 
+### On Linux
+
     # From the project root directory
     
     ./bin/id_test # Start unit tests
     make check # To verify all tests
+    
+### On Windoes
+
+    "Build All" in Visual Studio CMake project
