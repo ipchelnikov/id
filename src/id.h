@@ -88,11 +88,6 @@ private:
      */
     id& operator++();
 
-    /**
-     * @brief Gets the value in string format
-     * @return Formatted string
-     */
-    std::string get();
 
     std::string _val = ID_INITIAL;
 
