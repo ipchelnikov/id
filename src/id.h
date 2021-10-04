@@ -44,7 +44,7 @@ public:
      * @param s formatted string
      * @throw std::invalid_argument in case of issues with the string format
      */
-    id(const std::string &s);
+    explicit id(std::string s);
 
     /**
      * @brief Sets id to the value in the argument string

@@ -1,5 +1,3 @@
-#include <functional>
-#include <iostream>
 #include <mutex>
 #include <stdexcept>
 #include <string>
@@ -18,7 +16,7 @@ const std::unordered_map<char, size_t> id::letter_ind = std::invoke(
         return r;
     });
 
-id::id(const std::string& s) : _val{s}
+id::id(std::string s) : _val{std::move(s)}
 {
     const auto s_size = _val.size() + 1;
 
@@ -47,9 +45,8 @@ id::id(const std::string& s) : _val{s}
         }
 
         // Check number
-        const auto n = _val[pos + 1];
-
-        if (n < MIN_NUMBER || n > MAX_NUMBER)
+        if (const auto n = _val[pos + 1];
+            n < MIN_NUMBER || n > MAX_NUMBER)
         {
             throw std::out_of_range(NUMBER_OUT_OF_RANGE);
         }
@@ -58,7 +55,7 @@ id::id(const std::string& s) : _val{s}
 
 id& id::operator=(const std::string &s)
 {
-    id tmp{s};
+    const id tmp{s};
 
     std::unique_lock<std::mutex> lk(_m);
 
@@ -92,8 +89,8 @@ id& id::operator++()
         _val[pos + 1] = MIN_NUMBER;
 
         // Increment the letter
-        const auto ind = letter_ind.at(_val[pos]);
-        if (ind < sizeof(LETTERS) - 2)
+        if (const auto ind = letter_ind.at(_val[pos]);
+            ind < sizeof(LETTERS) - 2)
         {
             _val[pos] = LETTERS[ind + 1];
             return *this;
@@ -106,7 +103,7 @@ id& id::operator++()
     {
         _val += ID_SEPARATED;
     }
-    // Othrwise owerflow to the initial value
+    // Otherwise overflow to the initial value
     else
     {
         _val = ID_INITIAL;

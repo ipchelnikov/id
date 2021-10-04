@@ -39,7 +39,7 @@ TEST_F(IdTest, Assign_To_Id_Then_Increment)
 
 TEST_F(IdTest, Assign_Ill_Formatted_String_To_Id)
 {
-    bool exception_is_trown = false;
+    bool exception_is_thrown = false;
 
     std::string forbidden[] = {
         "A0",                                     // excluded number
@@ -57,16 +57,16 @@ TEST_F(IdTest, Assign_Ill_Formatted_String_To_Id)
         catch (std::invalid_argument &e)
         {
             std::cout << "s: " << s << " e: " << e.what() << '\n';
-            exception_is_trown = true;
+            exception_is_thrown = true;
         }
         catch (std::out_of_range &e)
         {
             std::cout << "s: " << s << " e: " << e.what() << '\n';
-            exception_is_trown = true;
+            exception_is_thrown = true;
         }
 
-        EXPECT_TRUE(exception_is_trown);
-        exception_is_trown = false;
+        EXPECT_TRUE(exception_is_thrown);
+        exception_is_thrown = false;
     }
 }
 
@@ -100,13 +100,13 @@ TEST_F(IdTest, Perf_Test)
     std::fstream fs;
     fs.open("test_result.txt", std::fstream::out);
 
-    auto start = std::chrono::system_clock::now();
+    const auto start = std::chrono::system_clock::now();
     for (int i = 0; i < increments; ++i)
     {
         fs << test_id.get_next() << '\n';
     }
-    auto end = std::chrono::system_clock::now();
-    std::chrono::duration<double> elapsed_seconds = end - start;
+    const auto end = std::chrono::system_clock::now();
+    const std::chrono::duration<double> elapsed_seconds = end - start;
 
     const auto end_id = test_id.get_next();
 
@@ -124,10 +124,11 @@ TEST_F(IdTest, Concurrent_Test)
 {
     test_id = start_id;
 
-    const int n_threads = 8;
+    constexpr int n_threads = 8;
     std::vector<std::thread> threads;
+    threads.reserve(n_threads);
 
-    auto start = std::chrono::system_clock::now();
+    const auto start = std::chrono::system_clock::now();
     for (int i = 0; i < n_threads; ++i)
     {
         threads.emplace_back([&]
@@ -147,9 +148,8 @@ TEST_F(IdTest, Concurrent_Test)
     {
         (*th).join();
     }
-    auto end = std::chrono::system_clock::now();
-
-    std::chrono::duration<double> elapsed_seconds = end - start;
+    const auto end = std::chrono::system_clock::now();
+    const std::chrono::duration<double> elapsed_seconds = end - start;
 
     const auto end_id = test_id.get_next();
 
