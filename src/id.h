@@ -23,10 +23,10 @@ class id final
 public:
 
     // Exceptions
-    static constexpr char SIZE_ISSUE[] = "Size issue";
-    static constexpr char FORMAT_ISSUE[] = "Format issue";
-    static constexpr char LETTER_OUT_OF_RANGE[] = "Letter is out of the range";
-    static constexpr char NUMBER_OUT_OF_RANGE[] = "Number is out of the range";
+    static constexpr char size_issue[] = "Size issue";
+    static constexpr char format_issue[] = "Format issue";
+    static constexpr char letter_out_of_range[] = "Letter is out of the range";
+    static constexpr char number_out_of_range[] = "Number is out of the range";
 
     // Disabled constructors
     id(const id&) = delete;
@@ -64,18 +64,19 @@ public:
 private:
 
     // Helper constants
-    static constexpr char ID_INITIAL[] = "A1";
-    static constexpr char ID_SEPARATED[] = "-A1";
+    static constexpr char id_initial[] = "A1";
+    static constexpr char id_separated[] = "-A1";
 
-    static constexpr char MIN_NUMBER{'1'};
-    static constexpr char MAX_NUMBER{'9'};
-    static constexpr char DELIMITER{'-'};
+    static constexpr char min_number{'1'};
+    static constexpr char max_number{'9'};
+    static constexpr char delimiter{'-'};
 
-    static constexpr size_t MAX_GROUPS{10};
-    static constexpr size_t GROUP_SIZE{3};
+    static constexpr size_t max_groups{10};
+    static constexpr size_t group_size{3};
 
     // Allowed letters
-    static constexpr char LETTERS[] = "ABCEHIKLNOPRSTUWXYZ";
+    // ReSharper disable once StringLiteralTypo
+    static constexpr char letters[] = "ABCEHIKLNOPRSTUWXYZ";
 
     // Letter indexes
     static const std::unordered_map<char, size_t> letter_ind;
@@ -89,8 +90,8 @@ private:
     id& operator++();
 
 
-    std::string _val = ID_INITIAL;
+    std::string val_ = id_initial;
 
-    std::mutex _m;
+    std::mutex m_;
 
 };

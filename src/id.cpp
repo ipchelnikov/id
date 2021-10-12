@@ -5,50 +5,50 @@
 
 #include "id.h"
 
-const std::unordered_map<char, size_t> id::letter_ind = std::invoke(
+const std::unordered_map<char, size_t> id::letter_ind = 
     []() -> const std::unordered_map<char, size_t>
     {
         std::unordered_map<char, size_t> r;
-        for (size_t i = 0; i < sizeof(LETTERS); ++i)
+        for (size_t i = 0; i < sizeof(letters); ++i)
         {
-            r[LETTERS[i]] = i;
+            r[letters[i]] = i;
         }
         return r;
-    });
+    } ();
 
-id::id(std::string s) : _val{std::move(s)}
+id::id(std::string s) : val_{std::move(s)}
 {
-    const auto s_size = _val.size() + 1;
+    const auto s_size = val_.size() + 1;
 
     // Input size validation
-    if (s_size < GROUP_SIZE ||
-        s_size > GROUP_SIZE * MAX_GROUPS ||
-        s_size % GROUP_SIZE)
+    if (s_size < group_size ||
+        s_size > group_size * max_groups ||
+        s_size % group_size)
     {
-        throw std::invalid_argument(SIZE_ISSUE);
+        throw std::invalid_argument(size_issue);
     }
 
-    for (size_t i = 0; i < (s_size + 1) / GROUP_SIZE; ++i)
+    for (size_t i = 0; i < (s_size + 1) / group_size; ++i)
     {
-        const auto pos = i * GROUP_SIZE;
+        const auto pos = i * group_size;
 
         // Check delimiter format
-        if (pos && _val[pos - 1] != DELIMITER)
+        if (pos && val_[pos - 1] != delimiter)
         {
-            throw std::invalid_argument(FORMAT_ISSUE);
+            throw std::invalid_argument(format_issue);
         }
 
         // Check letter
-        if (letter_ind.find(_val[pos]) == letter_ind.end())
+        if (letter_ind.find(val_[pos]) == letter_ind.end())
         {
-            throw std::out_of_range(LETTER_OUT_OF_RANGE);
+            throw std::out_of_range(letter_out_of_range);
         }
 
         // Check number
-        if (const auto n = _val[pos + 1];
-            n < MIN_NUMBER || n > MAX_NUMBER)
+        if (const auto n = val_[pos + 1];
+            n < min_number || n > max_number)
         {
-            throw std::out_of_range(NUMBER_OUT_OF_RANGE);
+            throw std::out_of_range(number_out_of_range);
         }
     }
 }
@@ -57,56 +57,56 @@ id& id::operator=(const std::string &s)
 {
     const id tmp{s};
 
-    std::unique_lock<std::mutex> lk(_m);
+    std::unique_lock<std::mutex> lk(m_);
 
-    _val = tmp._val;
+    val_ = tmp.val_;
 
     return *this;
 }
 
 std::string id::get_next()
 {
-    std::unique_lock<std::mutex> lk(_m);
+    std::unique_lock<std::mutex> lk(m_);
 
     ++*this;
 
-    return _val;
+    return val_;
 }
 
 id& id::operator++()
 {
-    const auto groups{(_val.size() + 1) / GROUP_SIZE};
+    const auto groups{(val_.size() + 1) / group_size};
 
     for (auto group{groups}; group > 0; --group)
     {
         // Increment the number
-        const auto pos = (group - 1) * GROUP_SIZE;
-        if (_val[pos + 1] < MAX_NUMBER)
+        const auto pos = (group - 1) * group_size;
+        if (val_[pos + 1] < max_number)
         {
-            ++_val[pos + 1];
+            ++val_[pos + 1];
             return *this;
         }
-        _val[pos + 1] = MIN_NUMBER;
+        val_[pos + 1] = min_number;
 
         // Increment the letter
-        if (const auto ind = letter_ind.at(_val[pos]);
-            ind < sizeof(LETTERS) - 2)
+        if (const auto ind = letter_ind.at(val_[pos]);
+            ind < sizeof(letters) - 2)
         {
-            _val[pos] = LETTERS[ind + 1];
+            val_[pos] = letters[ind + 1];
             return *this;
         }
-        _val[pos] = LETTERS[0];
+        val_[pos] = letters[0];
     }
 
     // If there is enough capacity add new group
-    if (groups < MAX_GROUPS)
+    if (groups < max_groups)
     {
-        _val += ID_SEPARATED;
+        val_ += id_separated;
     }
     // Otherwise overflow to the initial value
     else
     {
-        _val = ID_INITIAL;
+        val_ = id_initial;
     }
 
     return *this;
